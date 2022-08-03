@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">My Blog made with quasar framework and vuejs</string>
+    <string name="title_activity_main">My Blog made with quasar framework and vuejs</string>
+    <string name="package_name">com.as40.app</string>
+    <string name="custom_url_scheme">com.as40.app</string>
+</resources>

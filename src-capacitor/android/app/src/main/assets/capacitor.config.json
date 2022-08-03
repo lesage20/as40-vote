@@ -1,0 +1,10 @@
+{
+  "appId": "com.as40.app",
+  "appName": "My Blog made with quasar framework and vuejs",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "www",
+  "server": {
+    "url": "http://192.168.43.108:9500"
+  }
+}
