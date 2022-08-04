@@ -124,6 +124,7 @@ function login() {
 
       success.value = true;
       loading.value = false;
+      $q.notify("Compte crée avec succès");
       router.push({ name: "propos" });
     })
     .catch((err) => {
