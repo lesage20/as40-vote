@@ -1,41 +1,36 @@
-# My Blog made with quasar framework and vuejs (my-blog)
+# Application de vote de la génération AS40 
 
-My blog refont with quasar framework and vuejs
+Tu es AS40 et tu es un dvéloppeur? Tu peux contribuer au développement de cette application pour l'améliorer
 
-## Install the dependencies
+il suffit de le cloner et ajouter ce que tu veux ajouter comme fonctionnalité et tu fais un pull request
+il est fait avec vuejs et le framework quasar donc j'espère que tu sais coder en vuejs
+si tu fais du python aussi ça tombe bien le backend est fait en python/django et il est aussi open source
+(visite l'api) [https://github.com/lesage20/as40-vote-api]
+
+si tu as cloner que tu veux coder en local
+<b>NB:</b> Juste avant de commencer installe
+
+```bash
+npm i -g quasar
+```
+
+## Install les dépendances
 ```bash
 yarn
-# or
+# ou
 npm install
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+### lance ça dans l'invite de commande et pour voir le resultat en local
 ```bash
-quasar dev
+quasar dev -m capacitor -T android
+```
+<b>NB:</b> Il faut avoir android studio installé
+
+
+### génère l'apk
+```bash
+quasar build -m capacitor -T android
 ```
 
-
-### Lint the files
-```bash
-yarn lint
-# or
-npm run lint
-```
-
-
-### Format the files
-```bash
-yarn format
-# or
-npm run format
-```
-
-
-
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+### N'oublie pas d'ajouter des stars ca nous ferais plaisir
