@@ -83,7 +83,11 @@
       </div>
     </div>
     <div class="relative-position q-pb-xl" v-else>
-      <div class="row justify-center q-pb-xl absolute" style="top: -30px">
+      <div
+        class="row q-pb-xl"
+        :class="{ 'justify-center': $q.platform.is.mobile }"
+        style="top: -30px"
+      >
         <div
           class="col-xs-11 col-md-6 q-py-sm"
           :class="{ 'q-px-sm': !$q.platform.is.mobile }"
@@ -92,7 +96,7 @@
         >
           <q-card class="props" bordered flat>
             <q-card-section>
-              <div class="text-body2">cédrick Zouzoua {{ prop.author }}</div>
+              <div class="text-body2">{{ prop.author }}</div>
               <div class="text-h5">
                 <router-link
                   class="text-indigo"
@@ -309,17 +313,47 @@ import Empty from "src/components/EmptyComp.vue";
 import ProposForm from "src/components/ProposForm.vue";
 import { useAuthStore as auth } from "src/stores/auth";
 import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const $q = useQuasar();
 const propositions = ref([]);
 const api = inject("api");
 function getPropositions() {
   axios
-    .get(api + "propos/propositions/")
+    .get(api + "propositions/", {
+      headers: {
+        Authorization: "Bearer " + auth().token,
+      },
+    })
     .then((res) => {
       propositions.value = res.data;
     })
     .catch((err) => {
-      console.dir(err);
+      const status = err.response.status;
+      if (status == 0) {
+        $q.notify("Erreur de réseau vérifiez votre connexion à internet");
+      } else if (status == 400) {
+        Object.keys(err.response.data).forEach((er) => {
+          if (er != non_field_error) {
+            $q.notify(`${er}: ${err.response.data[er]}`);
+          } else {
+            $q.notify(`${err.response.data[er]}`);
+          }
+        });
+      } else if (status == 401) {
+        $q.notify("Veuillez vous connecter pour avoir accès à ce contenu");
+        router.push({ name: "login" });
+      } else if (status == 403) {
+        $q.notify("Vous ne pouvez pas avoir accès a ce contenu");
+      } else if (status == 404) {
+        $q.notify(
+          "Le lien demandé n'existe pas veuillez vous renseignez auprès du dévéloppeur pour plus d'info"
+        );
+      } else {
+        $q.notify(
+          "Un problème est survenu ce n'est pas à votre niveau. contactez nous ou signalez le sur https://github.com/lesage20/as40-vote/issues"
+        );
+      }
     });
 }
 onMounted(getPropositions);
@@ -349,14 +383,20 @@ const add = inject("add");
 const upvoted = ref({});
 const downvoted = ref({});
 function upvote(prop) {
-  console.log("prop: ", prop);
   axios
-    .post(api + "propos/upvotes/", {
-      proposition: prop.id,
-      voter: auth().user.id,
-    })
+    .post(
+      api + "upvotes/",
+      {
+        proposition: prop.id,
+        voter: auth().user.pk,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + auth().token,
+        },
+      }
+    )
     .then((res) => {
-      console.log("votre vote a été prise en compte");
       upvoted.value[prop.id] = true;
       setTimeout(() => {
         upvoted.value[prop.id] = false;
@@ -364,17 +404,42 @@ function upvote(prop) {
       getPropositions();
     })
     .catch((err) => {
-      if (err.response.status == 500) {
-        $q.notify("Vous avez déja voté pour cette proposition");
+      const status = err.response.status;
+      if (status == 0) {
+        $q.notify("Erreur de réseau vérifiez votre connexion à internet");
+      } else if (status == 400) {
+        Object.keys(err.response.data).forEach((er) => {
+          if (er != "non_field_errors" && er != "voter") {
+            $q.notify(`${er}: ${err.response.data[er]}`);
+          } else {
+            $q.notify(`${err.response.data[er]}`);
+          }
+        });
+      } else if (status == 401) {
+        $q.notify("Veuillez vous connecter pour avoir accès à ce contenu");
+      } else if (status == 403) {
+        $q.notify("Vous ne pouvez pas avoir accès a ce contenu");
+      } else {
+        $q.notify(
+          "Un problème est survenu ce n'est pas à votre niveau. contactez nous ou signalez le sur https://github.com/lesage20/as40-vote/issues"
+        );
       }
     });
 }
 function downvote(prop) {
   axios
-    .post(api + "propos/downvotes/", {
-      proposition: prop.id,
-      voter: auth().user.id,
-    })
+    .post(
+      api + "downvotes/",
+      {
+        proposition: prop.id,
+        voter: auth().user.pk,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + auth().token,
+        },
+      }
+    )
     .then((res) => {
       console.log("votre vote a été prise en compte");
       downvoted.value[prop.id] = true;
@@ -384,8 +449,25 @@ function downvote(prop) {
       getPropositions();
     })
     .catch((err) => {
-      if (err.response.status) {
-        $q.notify("Vous avez déja voté contre cette proposition");
+      const status = err.response.status;
+      if (status == 0) {
+        $q.notify("Erreur de réseau vérifiez votre connexion à internet");
+      } else if (status == 400) {
+        Object.keys(err.response.data).forEach((er) => {
+          if (er != "non_field_errors" && er != "voter") {
+            $q.notify(`${er}: ${err.response.data[er]}`);
+          } else {
+            $q.notify(`${err.response.data[er]}`);
+          }
+        });
+      } else if (status == 401) {
+        $q.notify("Veuillez vous connecter pour avoir accès à ce contenu");
+      } else if (status == 403) {
+        $q.notify("Vous ne pouvez pas avoir accès a ce contenu");
+      } else {
+        $q.notify(
+          "Un problème est survenu ce n'est pas à votre niveau. contactez nous ou signalez le sur https://github.com/lesage20/as40-vote/issues"
+        );
       }
     });
 }
@@ -403,22 +485,45 @@ function cancel() {
   add.value = false;
 }
 function save() {
-  console.log();
   axios
-    .post(api + "propos/propositions/", {
-      title: title.value,
-      description: description.value,
-      author: auth().user.username,
-    })
+    .post(
+      api + "propositions/",
+      {
+        title: title.value,
+        description: description.value,
+        author: auth().user.username,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + auth().token,
+        },
+      }
+    )
     .then((res) => {
       $q.notify("Proposition ajoutée avec succès");
       getPropositions();
       cancel();
     })
     .catch((err) => {
-      console.dir(err);
-      if (err.response.status == 404) {
-        $q.notify("Une erreur s'est produite");
+      const status = err.response.status;
+      if (status == 0) {
+        $q.notify("Erreur de réseau vérifiez votre connexion à internet");
+      } else if (status == 400) {
+        Object.keys(err.response.data).forEach((er) => {
+          if (er != non_field_error) {
+            $q.notify(`${er}: ${err.response.data[er]}`);
+          } else {
+            $q.notify(`${err.response.data[er]}`);
+          }
+        });
+      } else if (status == 401) {
+        $q.notify("Veuillez vous connecter pour avoir accès à ce contenu");
+      } else if (status == 403) {
+        $q.notify("Vous ne pouvez pas avoir accès a ce contenu");
+      } else {
+        $q.notify(
+          "Un problème est survenu ce n'est pas à votre niveau. contactez nous ou signalez le sur https://github.com/lesage20/as40-vote/issues"
+        );
       }
     });
 }

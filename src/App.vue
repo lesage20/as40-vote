@@ -7,5 +7,6 @@ import { provide } from "vue";
 import { useAuthStore as auth } from "./stores/auth.js";
 
 auth();
-provide("api", "http://192.168.43.108:8000/");
+
+provide("api", "https://as40-vote-api.herokuapp.com/");
 </script>

@@ -55,6 +55,10 @@
               >angezanou00@gmail.com</a
             >
             <br />
+            Signaler un problème:
+            <a href="https://github.com/lesage20/as40-vote/issues">
+              as40-vote issues
+            </a>
           </q-card-section>
         </q-card>
       </div>

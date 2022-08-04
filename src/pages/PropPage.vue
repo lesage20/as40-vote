@@ -127,7 +127,11 @@ const prop = ref({});
 const api = inject("api");
 function getProp() {
   axios
-    .get(api + "propos/propositions/" + route.params.id + "/")
+    .get(api + "propositions/" + route.params.id + "/", {
+      headers: {
+        Authorization: "Bearer " + auth().token,
+      },
+    })
     .then((res) => {
       prop.value = res.data;
     })
@@ -144,10 +148,18 @@ const downvoted = ref({});
 function upvote(prop) {
   console.log("prop: ", prop);
   axios
-    .post(api + "propos/upvotes/", {
-      proposition: prop.id,
-      voter: auth().user.id,
-    })
+    .post(
+      api + "upvotes/",
+      {
+        proposition: prop.id,
+        voter: auth().user.pk,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + auth().token,
+        },
+      }
+    )
     .then((res) => {
       console.log("votre vote a été prise en compte");
       upvoted.value[prop.id] = true;
@@ -164,10 +176,18 @@ function upvote(prop) {
 }
 function downvote(prop) {
   axios
-    .post(api + "propos/downvotes/", {
-      proposition: prop.id,
-      voter: auth().user.id,
-    })
+    .post(
+      api + "downvotes/",
+      {
+        proposition: prop.id,
+        voter: auth().user.pk,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + auth().token,
+        },
+      }
+    )
     .then((res) => {
       console.log("votre vote a été prise en compte");
       downvoted.value[prop.id] = true;
@@ -177,8 +197,29 @@ function downvote(prop) {
       getPropositions();
     })
     .catch((err) => {
-      if (err.response.status) {
-        $q.notify("Vous avez déja voté contre cette proposition");
+      if (err.response) {
+        const status = err.response.status;
+        if (status == 0) {
+          $q.notify("Erreur de réseau vérifiez votre connexion à internet");
+        } else if (status == 400) {
+          Object.keys(err.response.data).forEach((er) => {
+            if (er != "non_field_errors") {
+              $q.notify(`${er}: ${err.response.data[er]}`);
+            } else {
+              $q.notify(`${err.response.data[er]}`);
+            }
+          });
+        } else if (status == 401) {
+          $q.notify("Veuillez vous connecter pour avoir accès à ce contenu");
+        } else if (status == 403) {
+          $q.notify("Vous ne pouvez pas avoir accès a ce contenu");
+        } else {
+          $q.notify(
+            "Un problème est survenu ce n'est pas à votre niveau. contactez nous ou signalez le sur https://github.com/lesage20/as40-vote/issues"
+          );
+        }
+      } else {
+        $q.notify(err.message);
       }
     });
 }

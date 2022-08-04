@@ -13,23 +13,40 @@
         <q-card-section
           :style="$q.platform.is.desktop ? 'width: 70%' : 'width: 100%'"
         >
-          <div class="text-h6">Connexion</div>
-          <div class="text-subtitle text-grey-8">
-            connecte toi ici chers AS40
-          </div>
+          <div class="text-h6">Créér un compte</div>
+          <div class="text-subtitle text-grey-8">Crée ton compte AS40 ici</div>
           <q-form>
             <div class="col-12 text-center">
               <q-input v-model="username" class="text-center" label="username">
               </q-input>
             </div>
-            <q-input v-model="password" type="password" label="password">
-            </q-input>
+            <div class="col-12 text-center">
+              <q-input
+                v-model="email"
+                type="email"
+                class="text-center"
+                label="email"
+              >
+              </q-input>
+            </div>
+            <div class="col-12 text-center">
+              <q-input v-model="password" type="password" label="mot de passe">
+              </q-input>
+            </div>
+            <div class="col-12 text-center">
+              <q-input
+                v-model="password2"
+                type="password"
+                label="confirmer mot de passe"
+              >
+              </q-input>
+            </div>
 
             <q-btn
               flat
               @click="login"
               color="indigo"
-              label="me connecter"
+              label="créer mon compte"
               class="bg-indigo-1 full-width q-mt-md"
               :loading="loading"
             >
@@ -82,7 +99,9 @@ const api = inject("api");
 const $q = useQuasar();
 const router = useRouter();
 const username = ref("");
+const email = ref("");
 const password = ref("");
+const password2 = ref("");
 const loading = ref(false);
 const success = ref(false);
 const error = ref(false);
@@ -90,9 +109,11 @@ const error = ref(false);
 function login() {
   loading.value = true;
   axios
-    .post(api + "auth/login/", {
+    .post(api + "auth/register/", {
       username: username.value,
-      password: password.value,
+      password1: password.value,
+      email: email.value,
+      password2: password2.value,
     })
     .then((res) => {
       const data = {
@@ -103,36 +124,36 @@ function login() {
 
       success.value = true;
       loading.value = false;
-      router.push({ name: "propos" });
+      // router.push({ name: "propos" });
     })
     .catch((err) => {
       console.dir(err);
       error.value = true;
       loading.value = false;
-      const status = err.response.status;
-      if (status == 0) {
-        $q.notify("Erreur de réseau vérifiez votre connexion à internet");
-      } else if (status == 400) {
-        Object.keys(err.response.data).forEach((er) => {
-          if (er != non_field_error) {
-            $q.notify(`${er}: ${err.response.data[er]}`);
-          } else {
-            $q.notify(`${err.response.data[er]}`);
-          }
-        });
-      } else if (status == 401) {
-        $q.notify("Veuillez vous connecter pour avoir accès à ce contenu");
-        router.push({ name: "login" });
-      } else if (status == 403) {
-        $q.notify("Vous ne pouvez pas avoir accès a ce contenu");
-      } else if (status == 404) {
-        $q.notify(
-          "Le lien demandé n'existe pas veuillez vous renseignez auprès du dévéloppeur pour plus d'info"
-        );
+
+      if (err.response) {
+        const status = err.response.status;
+        if (status == 0) {
+          $q.notify("Erreur de réseau vérifiez votre connexion à internet");
+        } else if (status == 400) {
+          Object.keys(err.response.data).forEach((er) => {
+            if (er != "non_field_errors") {
+              $q.notify(`${er}: ${err.response.data[er]}`);
+            } else {
+              $q.notify(`${err.response.data[er]}`);
+            }
+          });
+        } else if (status == 401) {
+          $q.notify("Veuillez vous connecter pour avoir accès à ce contenu");
+        } else if (status == 403) {
+          $q.notify("Vous ne pouvez pas avoir accès a ce contenu");
+        } else {
+          $q.notify(
+            "Un problème est survenu ce n'est pas à votre niveau. contactez nous ou signalez le sur https://github.com/lesage20/as40-vote/issues"
+          );
+        }
       } else {
-        $q.notify(
-          "Un problème est survenu ce n'est pas à votre niveau. contactez nous ou signalez le sur https://github.com/lesage20/as40-vote/issues"
-        );
+        $q.notify(err.message);
       }
 
       setTimeout(() => {

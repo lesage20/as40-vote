@@ -80,7 +80,7 @@
       class="bg-indigo-1 text-indigo text-dark"
     >
       <q-tabs active-class=" text-bold">
-        <q-route-tab :to="{ name: 'index' }" exact no-caps icon="message">
+        <q-route-tab :to="{ name: 'propos' }" exact no-caps icon="message">
           Propos
         </q-route-tab>
         <q-route-tab :to="{ name: 'my-props' }" exact no-caps icon="person_add">
@@ -100,7 +100,7 @@
 <script setup>
 import { defineComponent, provide, ref } from "vue";
 const links = [
-  { name: "Propos", to: { name: "index" }, icon: "message" },
+  { name: "Propos", to: { name: "propos" }, icon: "message" },
   { name: "Mes Propos", to: { name: "my-props" }, icon: "person_add" },
   { name: "Profile", to: { name: "profile" }, icon: "person" },
   { name: "Apropos", to: { name: "about" }, icon: "help" },
