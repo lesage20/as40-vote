@@ -22,7 +22,7 @@
             </div>
           </q-card-section>
           <q-toolbar class="q-y-none">
-            <h1 class="text-h6 q-my-xs">{{ auth().user.username }}</h1>
+            <!-- <h1 class="text-h6 q-my-xs">{{ auth().user.username }}</h1> -->
             <q-space></q-space>
             <q-btn
               color="grey"
