@@ -1,10 +1,10 @@
 {
-  "name": "my-blog",
+  "name": "as40-vote",
   "version": "1.0.0",
-  "description": "My blog refont with quasar framework and vuejs",
-  "productName": "My Blog made with quasar framework and vuejs",
+  "description": "Application open source de proposition et de votes des fonctionnalités de la nouvelle application de digitalisation du lycée scientifique ",
+  "productName": "AS40 Vote",
   "author": "lesage20 <angezanou00@gmail.com>",
-  "private": true,
+  "private": false,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
     "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
