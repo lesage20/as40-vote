@@ -1,6 +1,6 @@
 # Application de vote de la génération AS40 
 
-Tu es AS40 et tu es un dvéloppeur? Tu peux contribuer au développement de cette application pour l'améliorer
+Tu es AS40 et tu es un développeur? Tu peux contribuer au développement de cette application pour l'améliorer
 
 il suffit de le cloner et ajouter ce que tu veux ajouter comme fonctionnalité et tu fais un pull request
 il est fait avec vuejs et le framework quasar donc j'espère que tu sais coder en vuejs
