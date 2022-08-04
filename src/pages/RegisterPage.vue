@@ -124,7 +124,7 @@ function login() {
 
       success.value = true;
       loading.value = false;
-      // router.push({ name: "propos" });
+      router.push({ name: "propos" });
     })
     .catch((err) => {
       console.dir(err);
