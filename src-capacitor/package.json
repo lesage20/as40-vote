@@ -1,7 +1,7 @@
 {
-  "name": "my-blog",
-  "version": "0.0.1",
-  "description": "My blog refont with quasar framework and vuejs",
+  "name": "as40-vote",
+  "version": "1.0.0",
+  "description": "Application open source de proposition et de votes des fonctionnalités de la nouvelle application de digitalisation du lycée scientifique ",
   "author": "lesage20 <angezanou00@gmail.com>",
   "private": true,
   "dependencies": {
